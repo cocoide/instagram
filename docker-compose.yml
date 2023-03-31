@@ -9,6 +9,8 @@ services:
       - "${WEB_PORT}:80"
     volumes:
       - "./src:/var/www/html"
+    depends_on:
+      - php
 
   php:
     container_name: "${PROJECT_NAME}-php"
