@@ -2,7 +2,7 @@ import "../css/app.css"
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
-import RootLayout from './components/Layouts/RootLayout';
+import { RootLayout } from './components/Layouts/RootLayout';
 import { DefaultLayout } from './components/Layouts/DefaultLayout';
 import Home from './pages/Home';
 import User from './pages/User';
