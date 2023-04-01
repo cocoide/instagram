@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,4 +29,15 @@ Route::get('/post', function () {
 });
 Route::get('/login', function () {
     return view('index');
+});
+Route::get('/oauth/github/redirect', [LoginController::class, "handleOAuthRedirect"]);
+Route::get('/oauth/github/callback', [LoginController::class, "handleOAuthCallback"]);
+Route::get("/auth/logout", [LogoutController::class, "logout"]);
+
+Route::get("/token", function () {
+    $user = Auth::user();
+    if ($user) {
+        return $user;
+    }
+    return response()->json([], 401);
 });

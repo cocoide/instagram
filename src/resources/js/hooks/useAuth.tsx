@@ -7,9 +7,9 @@ const useAuth = () => {
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const setAuthState = useSetRecoilState(authState({}));
 
-    const login = async (provider: "github" | "google" | "facebook") => {
+    const login = async (provider: "github") => {
         setIsLoggingIn(true);
-        window.location.href = `/auth/${provider}/redirect`;
+        window.location.href = `/oauth/${provider}/redirect`;
     };
 
     const logout = async () => {
@@ -35,7 +35,8 @@ const useAuth = () => {
     }
 
     useEffect(() => {
-        if (window.location.pathname === '/home') {
+        let path = window.location.pathname
+        if (path === '/home' || path == 'post' || path == '/user') {
             handleAuth();
         }
     }, []);
