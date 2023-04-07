@@ -3,20 +3,17 @@ import { atomFamily, selector } from 'recoil'
 export const authState = atomFamily({
   key: 'authState',
   default: {
+    id: 0,
+    name: "",
+    img_src: "",
     isLogin: false,
-    user: {
-      id: 0,
-    },
   },
 })
 
 export const loginSelector = selector({
   key: 'loginSelector',
   get: ({ get }) => {
-    const { isLogin, user } = get(authState({}))
-    return {
-      isLogin,
-      user,
-    }
+    const { id, name, img_src,isLogin } = get(authState({}))
+    return { id, name, img_src,isLogin }
   },
 })

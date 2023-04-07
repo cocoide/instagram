@@ -30,14 +30,15 @@ Route::get('/post', function () {
 Route::get('/login', function () {
     return view('index');
 });
-Route::get('/oauth/github/redirect', [LoginController::class, "handleOAuthRedirect"]);
-Route::get('/oauth/github/callback', [LoginController::class, "handleOAuthCallback"]);
+Route::get('/auth/github/redirect', [LoginController::class, "handleOAuthRedirect"]);
+Route::get('/auth/github/callback', [LoginController::class, "handleOAuthCallback"]);
 Route::get("/auth/logout", [LogoutController::class, "logout"]);
 
-Route::get("/token", function () {
-    $user = Auth::user();
+Route::get("/auth/token", function () {
+    $user = Auth::user()->select("id", "name", "img_src")->first();
     if ($user) {
+        $user['isLogin'] = true;
         return $user;
     }
-    return response()->json([], 401);
+    return response()->json(false, 401);
 });

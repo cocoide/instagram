@@ -11,9 +11,9 @@ const Login = () => {
     <div className={clsx(login_body)}>
       <button onClick={() => login('github')} className={clsx(login_button)}>
         {isLoggingIn ? (
-          <div className="flex flex-row items-center">Login Loading...</div>
+          <div className="flex flex-row items-center">ログイン中...</div>
         ) : (
-          <div>Login with Github</div>
+            <div>ログイン with Github</div>
         )}
       </button>
     </div>
