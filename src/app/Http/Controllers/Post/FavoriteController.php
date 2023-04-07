@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Post;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
@@ -41,5 +42,13 @@ class FavoriteController extends Controller
         } catch (\Exception $e) {
             return response($e->getMessage(), $e->getCode() ?: 500);
         }
+    }
+    public function getUsersWhoLiked($postId)
+    {
+        return User::whereHas('favorites', function ($query) use ($postId) {
+            $query->where('post_id', $postId);
+        })
+            ->select('id', 'name', 'img_src')
+            ->get();
     }
 }

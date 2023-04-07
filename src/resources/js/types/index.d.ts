@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
 
-export interface LayoutType {
+interface LayoutType {
   children?: ReactNode
 }

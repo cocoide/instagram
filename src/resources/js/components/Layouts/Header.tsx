@@ -8,7 +8,7 @@ const header_body = 'p-2 relative bg-white h-20 border-b border-gray-200 flex fl
 const image_loader = "h-10 w-10 bg-gray-200 rounded-full animate-pulse"
 
 const Header = () => {
-  const { isLogin, img_src, name } = useRecoilValue(loginSelector)
+  const { isLogin, img_src, name, id } = useRecoilValue(loginSelector)
   const { logout, isLoading } = useAuth()
   return (
     <div className={clsx(header_body)}>
@@ -20,7 +20,7 @@ const Header = () => {
           {/* {isLogin ? <button onClick={() => logout()}>ログアウト</button> : <Link to="/login">ログイン</Link>} */}
           {!isLogin && <Link to="/login">ログイン</Link>}
       <Link to="/post">投稿する</Link>
-      {img_src && <img src={img_src} alt={name} className="h-10 w-10 rounded-full  ring-1 ring-gray-300 shadow-sm" />}
+          {img_src && <Link to={`/user/${id}`}><img src={img_src} alt={name} className="h-10 w-10 rounded-full  ring-1 ring-gray-300 shadow-sm" /></Link>}
       {isLoading && <div className={clsx(image_loader)} />}
         </>
       }

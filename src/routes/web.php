@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Post\FavoriteController;
 use App\Http\Controllers\Post\PostController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,13 +24,16 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('index');
 });
-Route::get('/user', function () {
+Route::get('/user/{id}', function () {
     return view('index');
 });
 Route::get('/post', function () {
     return view('index');
 });
 Route::get('/login', function () {
+    return view('index');
+});
+Route::get('/favorite/{id}', function () {
     return view('index');
 });
 Route::get('/auth/github/redirect', [LoginController::class, "handleOAuthRedirect"]);
@@ -50,3 +54,5 @@ Route::delete("/post/delete/{postId}", [PostController::class, "deletePost"]);
 
 Route::post("/favorite/{postId}", [FavoriteController::class, "registerFavorite"]);
 Route::delete("/favorite/{postId}", [FavoriteController::class, "deleteFavorite"]);
+Route::get("/user/{userId}/post", [UserController::class, "getUserDataWithPosts"]);
+Route::get("/favorite/{postId}", [FavoriteController::class, "getUsersWhoLiked"]);
