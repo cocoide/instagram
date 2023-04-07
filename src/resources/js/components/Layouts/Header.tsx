@@ -12,11 +12,18 @@ const Header = () => {
   const { logout, isLoading } = useAuth()
   return (
     <div className={clsx(header_body)}>
+      {isLoading ?
+        <div className="h-8 w-[200px] bg-gray-200 rounded-xl"></div>
+        :
+        <>
       <Link to="/home">ホーム</Link>
-      {isLogin ? <button onClick={() => logout()}>ログアウト</button> : <Link to="/login">ログイン</Link>}
+          {/* {isLogin ? <button onClick={() => logout()}>ログアウト</button> : <Link to="/login">ログイン</Link>} */}
+          {!isLogin && <Link to="/login">ログイン</Link>}
       <Link to="/post">投稿する</Link>
       {img_src && <img src={img_src} alt={name} className="h-10 w-10 rounded-full  ring-1 ring-gray-300 shadow-sm" />}
       {isLoading && <div className={clsx(image_loader)} />}
+        </>
+      }
     </div>
   )
 }

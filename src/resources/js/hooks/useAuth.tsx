@@ -20,6 +20,7 @@ const useAuth = () => {
   const navigate = useNavigate()
 
   const login = async (provider: 'github') => {
+    showToast("ログイン中", "loading")
     const oAuthRedirectURL = `/auth/${provider}/redirect`
     setIsLoading(true)
     window.location.href = oAuthRedirectURL
