@@ -10,6 +10,8 @@ const upload_section = "bg-gray-200 rounded-md p-1 w-[300px] text-center aspect-
 const write_description = "ring-1 ring-gray-300 p-1 w-[300px] rounded-md"
 const submit_button = "p-2 bg-purple-300 rounded-xl text-white shadow-sm"
 
+const apiClient = new AxiosApiClient()
+
 const accept_image_type = ".png, .jpg, .gif"
 const Post = () => {
   const [imgPath, setImgPath] = useState("")
@@ -43,7 +45,6 @@ const Post = () => {
   }
 
   function handleImageSubmit(base64Image: string, extension: string) {
-    const apiClient = new AxiosApiClient()
     apiClient
       .post<string>(`/upload/image`, { image: base64Image, extention: extension })
       .then((response) => {
@@ -56,7 +57,6 @@ const Post = () => {
   async function onSubmit(data: any) {
     setIsSubmitting(true)
     showToast("送信中", "loading")
-    const apiClient = new AxiosApiClient()
     apiClient
       .post<any>(`/post/publish`, data)
       .then(() => {

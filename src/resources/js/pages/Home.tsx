@@ -4,7 +4,9 @@ import { clsx } from "../utils/clsx"
 import AxiosApiClient from "../utils/axios"
 import PostItem from '../features/Home/components/PostItem'
 import { FetchHomeData, FetchPostData } from '../features/Home/types/action'
-import PaginateButton from '../features/Home/components/PaginateBUtton'
+import PaginateButton from '../features/Home/components/PaginateButton'
+
+const apiClient = new AxiosApiClient()
 
 const Home = () => {
   const [page, setPage] = useState<number>(1)
@@ -13,7 +15,6 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const apiClient = new AxiosApiClient()
     apiClient
       .get<FetchHomeData>(`post/home?page=${page}`)
       .then((response) => {
