@@ -15,13 +15,13 @@ type GetAuthToken = {
 } 
 
 const useAuth = () => {
-  const [isLoggingIn, setIsLoggingIn] = useState(false)
   const setAuthState = useSetRecoilState(authState({}))
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const login = async (provider: 'github') => {
     const oAuthRedirectURL = `/auth/${provider}/redirect`
-    setIsLoggingIn(true)
+    setIsLoading(true)
     window.location.href = oAuthRedirectURL
   }
 
@@ -36,14 +36,16 @@ const useAuth = () => {
   }
 
   async function handleAuth() {
+    setIsLoading(true)
     await apiClient
       .get<GetAuthToken>('/auth/token')
       .then(response => {
         if (response.isLogin) {
-          console.log(response)
-          return setAuthState(response)
+          setAuthState(response)
+          return setIsLoading(false)
         }
-        return setAuthState({ id: 0, name: "", img_src: "", isLogin: true })
+        setAuthState({ id: 0, name: "", img_src: "", isLogin: false })
+        return setIsLoading(false)
       })
       .catch((error) => apiClient.handleError(error))
   }
@@ -61,7 +63,7 @@ const useAuth = () => {
     }
   }, [])
 
-  return { isLoggingIn, login, logout }
+  return { login, logout, isLoading }
 }
 
 export default useAuth

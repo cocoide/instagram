@@ -35,10 +35,10 @@ Route::get('/auth/github/callback', [LoginController::class, "handleOAuthCallbac
 Route::get("/auth/logout", [LogoutController::class, "logout"]);
 
 Route::get("/auth/token", function () {
-    $user = Auth::user()->select("id", "name", "img_src")->first();
-    if ($user) {
+    if (Auth::check()) {
+        $user = Auth::user()->select("id", "name", "img_src")->first();
         $user['isLogin'] = true;
         return $user;
     }
-    return response()->json(false, 401);
+    return response()->json(false);
 });
