@@ -31,4 +31,4 @@ services:
       - "MYSQL_USER={MYSQL_USER}"
       - "MYSQL_PASSWORD={MYSQL_PASSWORD}"
     volumes:
-      - "./data:/var/lib/mysql"
+      - "./data/mysql:/var/lib/mysql"
