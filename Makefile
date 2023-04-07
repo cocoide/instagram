@@ -15,3 +15,5 @@ php:
 	docker-compose exec php bash
 mysql:
 	docker-compose exec mysql bash -c 'mysql -u root -p'
+vite:
+	cd src && vite

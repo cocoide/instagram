@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Post\FavoriteController;
+use App\Http\Controllers\Post\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,3 +44,9 @@ Route::get("/auth/token", function () {
     }
     return response()->json(false);
 });
+Route::post("/post/publish", [PostController::class, "publishNewPost"]);
+Route::get("/post/home", [PostController::class, "getAllPostsDataForHome"]);
+Route::delete("/post/delete/{postId}", [PostController::class, "deletePost"]);
+
+Route::post("/favorite/{postId}", [FavoriteController::class, "registerFavorite"]);
+Route::delete("/favorite/{postId}", [FavoriteController::class, "deleteFavorite"]);
