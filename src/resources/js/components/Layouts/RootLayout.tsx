@@ -1,13 +1,11 @@
-import { RecoilBridge, RecoilEnv, RecoilRoot } from 'recoil';
-import { LayoutType } from '../../types';
+import { RecoilRoot } from 'recoil'
+import { LayoutType } from '../../types'
 
 export const RootLayout = ({ children }: LayoutType) => {
-    return (
-        <div>
-            <RecoilRoot>
-                {children}
-            </RecoilRoot>
-        </div>
-    )
+  return (
+    <div>
+      <RecoilRoot>{children}</RecoilRoot>
+    </div>
+  )
 }
 export default RootLayout
