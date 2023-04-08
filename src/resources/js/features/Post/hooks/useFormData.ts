@@ -8,6 +8,9 @@ import { PostFormData } from '../types/actions';
 
 export const usePostForm = () => {
   const [imgPath, setImgPath] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
+  
   const {
     register,
     handleSubmit,
@@ -15,17 +18,8 @@ export const usePostForm = () => {
     formState: { errors },
     setValue,
   } = useForm<PostFormData>()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const navigate = useNavigate()
 
   const apiClient = new AxiosApiClient()
-
-  const descriptionValidates = {
-    maxLength: {
-      value: 200,
-      message: `200文字以内で入力`,
-    },
-  }
 
   async function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
     const reader = new FileReader()
@@ -34,7 +28,7 @@ export const usePostForm = () => {
     const fileExtension = fileNameParts[fileNameParts.length - 1]
     reader.onloadend = async () => {
       const base64Image = reader.result as string
-      await handleImageSubmit(base64Image, fileExtension)
+      handleImageSubmit(base64Image, fileExtension)
     }
     reader.readAsDataURL(file)
   }
@@ -71,7 +65,6 @@ export const usePostForm = () => {
     handleSubmit,
     isSubmitting,
     handleImageChange,
-    descriptionValidates,
     onSubmit,
   }
 }

@@ -15,11 +15,13 @@ const UserDetail = ({ img_src, name, favorites }: UserDetailProps) => {
                     <div className={clsx(avatar_loader)}></div>
                 )}
                 {name ? (
-                    <div className="text-gray-500 text-xl font-bold">{name}</div>
+                    <div className="text-gray-500 text-xl font-bold"
+                    >{name}</div>
                 ) : (
                     <div className={clsx(name_loader)}></div>
                 )}
-                <div className="text-gray-500 text-xl">❤️ {favorites.length}</div>
+                <div className="text-gray-500 text-xl"
+                >❤️ {favorites.length}</div>
             </div>
         </>
     )
