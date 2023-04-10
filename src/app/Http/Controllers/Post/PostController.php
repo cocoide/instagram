@@ -3,42 +3,45 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
-use App\Models\Post;
+use App\Services\Post\PostService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
     public function getAllPostsDataForHome()
     {
-        return Post::with([
-            'author',
-            'favorites' => function ($query) {
-                $query->select('user_id');
-            }
-        ])
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        try {
+            $posts = $this->postService->getAllPosts();
+            return response()->json($posts, 200);
+        } catch (\Exception $e) {
+            return response($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
-
-    public function publishNewPost(Request $request)
+    public function createPost(Request $request)
     {
+        try {
         $description = $request->input("description");
-        $img_src = $request->input("img_src");
-        $author_id = Auth::user()->id;
+            $img_src = $request->input("img_src");
 
-        $post = new Post();
-        $post->description = $description;
-        $post->img_src = $img_src;
-        $post->author_id = $author_id;
-        $post->save();
+            $this->postService->storePost($description, $img_src);
         return response()->json("投稿を完了しました", 201);
+        } catch (\Exception $e) {
+            return response($e->getMessage(), $e->getCode());
+        }
     }
 
     public function deletePost($postId)
     {
-        $post = Post::find($postId);
-        $post->delete();
-        return response()->json("投稿の削除を完了", 201);
+        try {
+            $this->postService->deletePost($postId);
+        } catch (\Exception $e) {
+            return response($e);
+        }
     }
 }

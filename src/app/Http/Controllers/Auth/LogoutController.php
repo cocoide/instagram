@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
-    public function logout()
+    public function handleLogout()
     {
         Auth::logout();
-        if (!Auth::check()) {
-            return response()->json("Logout succeded", 200);
+        if (Auth::check()) {
+            return redirect("/home")->withErrors("ログアウトに失敗", 500);
         }
-        response()->json("Logout failed", 400);
+        return redirect("/login")->withErrors("ログアウトに成功", 200);
     }
 }

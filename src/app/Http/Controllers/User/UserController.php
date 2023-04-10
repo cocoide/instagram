@@ -2,24 +2,33 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
+use App\Services\User\UserService;
 
 class UserController extends Controller
 {
-    public function getUserDataWithPosts($userId)
+    protected $userService;
+
+    public function __construct(UserService $userService)
     {
-        return User::with([
-            'posts' => function ($query) {
-                $query->orderBy('created_at', 'desc')->select('id', 'img_src', 'author_id');
-            },
-            'favorites' => function ($query) use ($userId) {
-                $query->where('user_id', $userId)->select('post_id');
-            },
-        ])
-            ->select('id', 'name', 'img_src')
-            ->find($userId);
+        $this->userService = $userService;
+    }
+    public function getUserDataWithPosts(string $userId)
+    {
+        try {
+            $user = $this->userService->getUserDataWithPosts($userId);
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+    public function getAuthToken()
+    {
+        try {
+            $userDataOrFalse = $this->userService->checkAuthData();
+            return response()->json($userDataOrFalse);
+        } catch (\Exception $e) {
+            return response($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 }

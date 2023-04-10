@@ -3,44 +3,32 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
+use App\Services\Auth\LoginService;
 
 class LoginController extends Controller
 {
-    public function handleOAuthRedirect()
+    protected $loginService;
+
+    public function __construct(LoginService $loginService)
     {
-        return Socialite::driver("github")->redirect();
+        $this->loginService = $loginService;
     }
-    public function handleOAuthCallback()
+    public function handleOAuthRedirect(string $provider)
     {
-        $oAuthToken = Socialite::driver("github")->user();
-        $existUser = $this->findByOAuthToken($oAuthToken);
-        if ($existUser) {
-            Auth::login($existUser);
-            return redirect("/home");
+        try {
+            return $this->loginService->redirectToOAuth($provider);
+        } catch (\Exception $e) {
+            return redirect("/login")->withErrors($e->getMessage(), $e->getCode() ?: 500);
         }
-        $newUser = User::query()->updateOrCreate(
-            [
-                'provider_id' => $oAuthToken->id,
-                'provider' => "github",
-            ],
-            // 以下のカラムはアカウント作成後更新されない
-            [
-                'email' => $oAuthToken->email,
-                'name' => $oAuthToken->nickname,
-                'img_src' => $oAuthToken->avatar,
-            ],
-        );
-        Auth::login($newUser);
-        return redirect("/home");
     }
 
-    private function findByOAuthToken($oAtuhToken)
+    public function handleOAuthCallback(string $provider)
     {
-        return User::where("provider", "github")
-            ->where("email", $oAtuhToken->email)
-            ->first();
+        try {
+            $this->loginService->loginOrSignupByOAuth($provider);
+        } catch (\Exception $e) {
+            return redirect("/login")->withErrors($e->getMessage(), $e->getCode() ?: 500);
+        }
+        return redirect("/home");
     }
 }

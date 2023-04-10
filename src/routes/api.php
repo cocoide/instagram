@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Post\FavoriteController;
+
+use App\Http\Controllers\User\FavoriteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
