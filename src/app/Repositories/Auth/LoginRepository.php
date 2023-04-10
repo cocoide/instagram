@@ -23,8 +23,15 @@ class LoginRepository
 
     public function findUserByOAuth(string $provider, $oAtuhToken)
     {
-        return User::where("provider", $provider)
-            ->where("email", $oAtuhToken->email)
+        $user = User::where('email', $oAtuhToken->email)
             ->first();
+
+        if (!$user) {
+            return null;
+        }
+        if ($user->provider !== $provider) {
+            throw new \Exception('メールアドレスが他のプロバイダで既に使われてます', 401);
+        }
+        return $user;
     }
 }
