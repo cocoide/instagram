@@ -23,10 +23,6 @@ class UserService
     }
     public function checkAuthData()
     {
-        $user = $this->userRepository->getLoginUserData();
-        if ($user == null) {
-            return false;
-        }
-        return $user;
+        return $this->userRepository->getLoginUserData();
     }
 }

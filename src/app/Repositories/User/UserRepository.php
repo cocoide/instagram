@@ -23,8 +23,10 @@ class UserRepository
     public function getLoginUserData()
     {
         if (!Auth::check()) {
-            return null;
+            return false;
         }
-        return Auth::user()->select("id", "name", "img_src")->first();
+        $user = Auth::user()->select("id", "name", "img_src")->first();
+        $user['isLogin'] = true;
+        return $user;
     }
 }

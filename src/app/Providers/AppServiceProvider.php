@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Post\ImageController;
 use App\Http\Controllers\User\UserController;
 use App\Repositories\User\UserRepository;
+use App\Services\Post\ImageService;
 use App\Services\User\UserService;
 use Illuminate\Support\ServiceProvider;
 
@@ -75,6 +77,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserController::class, function ($app) {
             $service = $app->make(UserService::class);
             return new UserController($service);
+        });
+
+
+        $this->app->bind(ImageService::class, function ($app) {
+            return new ImageService();
+        });
+
+        $this->app->bind(ImageController::class, function ($app) {
+            $service = $app->make(ImageService::class);
+            return new ImageController($service);
         });
     }
 

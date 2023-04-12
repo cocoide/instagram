@@ -34,9 +34,11 @@ export const usePostForm = () => {
   }
 
   function handleImageSubmit(base64Image: string, extension: string) {
+    showToast("画像をアップロード中","loading")
     apiClient
       .post<string>(`/upload/image`, { image: base64Image, extention: extension })
       .then((response) => {
+        showToast("画像のアップロードを完了","success")
         setImgPath(response)
         setValue("img_src", response)
       })
