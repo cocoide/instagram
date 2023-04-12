@@ -34,6 +34,9 @@ class LoginService
             throw new \Exception("OAuthのアクセストークン取得中にエラーが発生", 401);
         }
         $existUser = $this->loginRepository->findUserByOAuth($provider, $oAtuhToken);
+        if ($existUser->provider !== $provider) {
+            throw new \Exception('メールアドレスが他のプロバイダで既に使われてます', 401);
+        }
         if ($existUser) {
             return Auth::login($existUser);
         }
