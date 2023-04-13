@@ -1,0 +1,55 @@
+name: PhpUnitCoverage
+
+on:
+  push:
+    branches:
+      - main
+  # pull_request:
+  #   branches: [ main ]
+
+jobs:
+  build:
+    # 実行環境
+    runs-on: ubuntu-latest
+    steps:
+      # $GITHUB_WORKSPACE配下のリポジトリをチェックアウトしてアクセス可能にする
+      - uses: actions/checkout@v2
+
+      - name: dokcer-compose Laravel Init
+        run: |
+          docker-compose up -d
+          docker-compose exec -T laravel bash -c "composer install"
+          docker-compose exec -T laravel bash -c "cp .env.example .env"
+          docker-compose exec -T laravel bash -c "php artisan key:generate"
+          docker-compose exec -T laravel bash -c "php artisan config:cache"
+          docker-compose exec -T laravel bash -c "sleep 200"
+
+      - name: Exec Phpunit
+        run: |
+          docker-compose exec -T laravel bash -c "phpdbg -qrr ./vendor/bin/phpunit --coverage-text --colors=never > storage/logs/coverage.log"
+          docker-compose exec -T laravel bash -c "cat storage/logs/coverage.log"
+
+      - name: Cat Test Result
+        run: |
+          cat ./src/laravel/storage/logs/coverage.log
+        if: ${{ failure() }}
+
+      - name: Sed Coverage Report
+        run: |
+          sed -E "s/"$'\E'"\[([0-9]{1,2}(;[0-9]{1,2})*)?m//g" | \
+          grep "Code Coverage Report:" -A6 ./src/laravel/storage/logs/coverage.log | sed -e "s/^ *//" | sed -e "s/ *$//" | sed -e "/^ *$/d" > ./src/laravel/storage/logs/coverage-summary.log
+
+      - name: Read coverage summary
+        id: coverage-summary
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./src/laravel/storage/logs/coverage-summary.log
+
+      - name: Comment Coverage Summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: coverage-summary
+          message: |
+            ## Coverage Summary
+            ${{ steps.coverage-summary.outputs.content }}
