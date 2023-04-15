@@ -30,15 +30,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Build Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: false
-          tags: my-laravel-app:latest
+        
+      - name: Build and start containers
+        run: |
+          docker-compose build
+          docker-compose up -d
           
-      
       - name: Install Dependencies
         run: |
           docker-compose run --rm app composer install --no-progress --no-interaction --prefer-dist
@@ -48,3 +45,6 @@ jobs:
           docker-compose run --rm app php artisan config:cache
           docker-compose run --rm app php artisan migrate --force
           docker-compose run --rm app vendor/bin/phpunit
+          
+      - name: Stop containers
+        run: docker-compose down
