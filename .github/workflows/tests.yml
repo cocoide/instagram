@@ -10,38 +10,34 @@ on:
       - bugfix
 
 jobs:
-  build:
+  phpunit:
     runs-on: ubuntu-latest
-    env:
-      APP_ENV: testing
-      APP_KEY: base64:uV7+ASG+wtEwhruM8rpMh1Ix9Rf6gZU6TlUzTnT4oOM=
-      PROJECT_NAME: instagram
-      DB_PORT: 3306
-      WEB_PORT: 8080
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: mydb
-      MYSQL_USER: root
-      MINIO_USER: root
-      MINIO_PASSWORD: secretpass
-      
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.2
+ 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+ 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Build and start containers
-        run: |
-          docker-compose build
-          docker-compose up -d
-          
-      - name: Install Dependencies
-        run: |
-          docker-compose run --rm app composer install --no-progress --no-interaction --prefer-dist
-          
-      - name: Run Tests
-        run: |
-          docker-compose run --rm php php artisan config:cache
-          docker-compose run --rm php php artisan migrate --force
-          docker-compose run --rm php vendor/bin/phpunit
-          
-      - name: Stop containers
-        run: docker-compose down
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+ 
+    - name: Install composer dependencies
+      run: |
+        composer install --no-scripts
+ 
+    - name: Setup Laravel
+      run: |
+        cp .env.testing .env
+        php artisan key:generate
+ 
+    - name: Run PHPUnit Tests
+      run: vendor/bin/phpunit tests/
