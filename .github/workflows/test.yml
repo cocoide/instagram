@@ -1,9 +1,13 @@
 name: Run PHPUnit Tests
 
 on:
-  pull_request:
-     branches:
+  push:
+    branches:
       - main
+      - develop
+      - debug
+    paths:
+      - 'src/app/Services/**'
 
 jobs:
   build:
