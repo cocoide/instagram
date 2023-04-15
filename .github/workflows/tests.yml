@@ -37,15 +37,14 @@ jobs:
           context: .
           push: false
           tags: my-laravel-app:latest
-
-      - name: Run PHPUnit tests
-        uses: docker/compose-action@1.29.2
-        with:
-          compose-file: docker-compose.yml
-          service-name: app
-          env-file: .env.testing
-          run: |
-            composer install --no-progress --no-interaction --prefer-dist
-            php artisan config:cache
-            php artisan migrate --force
-            vendor/bin/phpunit
+          
+      
+      - name: Install Dependencies
+        run: |
+          docker-compose run --rm app composer install --no-progress --no-interaction --prefer-dist
+          
+      - name: Run Tests
+        run: |
+          docker-compose run --rm app php artisan config:cache
+          docker-compose run --rm app php artisan migrate --force
+          docker-compose run --rm app vendor/bin/phpunit
