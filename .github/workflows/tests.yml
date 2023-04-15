@@ -12,20 +12,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: test
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     env:
       APP_ENV: testing
       APP_KEY: base64:uV7+ASG+wtEwhruM8rpMh1Ix9Rf6gZU6TlUzTnT4oOM=
+      PROJECT_NAME: instagram
+      DB_PORT: 3306
+      WEB_PORT: 8080
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: mydb
+      MYSQL_USER: root
+      MINIO_USER: root
+      MINIO_PASSWORD: secretpass
       
     steps:
       - name: Checkout code
@@ -42,9 +39,9 @@ jobs:
           
       - name: Run Tests
         run: |
-          docker-compose run --rm app php artisan config:cache
-          docker-compose run --rm app php artisan migrate --force
-          docker-compose run --rm app vendor/bin/phpunit
+          docker-compose run --rm php php artisan config:cache
+          docker-compose run --rm php php artisan migrate --force
+          docker-compose run --rm php vendor/bin/phpunit
           
       - name: Stop containers
         run: docker-compose down
