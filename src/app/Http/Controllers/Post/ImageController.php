@@ -34,9 +34,7 @@ class ImageController extends Controller
 
             $uploadImage = $this->imageService->decodeBase64($imageData);
 
-            $S3Client = $this->imageService->setupS3Client();
-
-            $this->imageService->uploadToS3($S3Client, $uploadImage, $fileName, $extention);
+            $this->imageService->uploadImageToS3($uploadImage, $fileName, $extention);
 
             return $this->imageService->getURLByFileName($fileName);
 
