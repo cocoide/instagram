@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Controllers\Post\ImageController;
 use App\Http\Controllers\User\UserController;
+use App\Repositories\AWS\S3Repository;
 use App\Repositories\User\UserRepository;
 use App\Services\Post\ImageService;
 use App\Services\User\UserService;
@@ -81,7 +82,8 @@ class AppServiceProvider extends ServiceProvider
 
 
         $this->app->bind(ImageService::class, function ($app) {
-            return new ImageService();
+            $repository = $app->make(S3Repository::class);
+            return new ImageService($repository);
         });
 
         $this->app->bind(ImageController::class, function ($app) {

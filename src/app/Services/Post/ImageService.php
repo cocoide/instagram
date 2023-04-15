@@ -2,12 +2,18 @@
 
 namespace App\Services\Post;
 
-use Aws\S3\S3Client;
+use App\Repositories\AWS\S3Repository;
 use Illuminate\Support\Facades\Storage;
 
 
 class ImageService
 {
+    protected $s3Repository;
+
+    public function __construct(S3Repository $s3Repository)
+    {
+        $this->s3Repository = $s3Repository;
+    }
 
     public function validateImage($image, $extention)
     {
@@ -45,30 +51,10 @@ class ImageService
         return $isDecodeString;
     }
 
-    public function setupS3Client()
+    public function uploadImageToS3($bodyFile, $fileName, $extention)
     {
-        $client = new S3Client([
-            'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => true,
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ],
-        ]);
-        return $client;
-    }
-
-    public function uploadToS3(S3Client $client, $bodyFile, $fileName, $extention)
-    {
-        $client->putObject([
-            'Bucket' => env('AWS_BUCKET'),
-            'Key' => 'posts/' . $fileName,
-            'Body' => $bodyFile,
-            'ContentType' => $extention,
-            'ACL' => 'public-read',
-        ]);
+        $client = $this->s3Repository->connectS3();
+        $this->s3Repository->uploadImage($client, $bodyFile, $fileName, $extention, "posts");
     }
 
     public function getURLByFileName($fileName)

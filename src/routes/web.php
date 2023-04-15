@@ -48,6 +48,6 @@ Route::delete("/post/delete/{postId}", [PostController::class, "deletePost"]);
 
 Route::post("/favorite/{postId}", [FavoriteController::class, "registerFavorite"]);
 Route::delete("/favorite/{postId}", [FavoriteController::class, "deleteFavorite"]);
-Route::get("/user/{userId}/post", [UserController::class, "getUserDsataWithPosts"]);
+Route::get("/user/{userId}/post", [UserController::class, "getUserDataWithPosts"]);
 Route::get("/favorite/{postId}", [FavoriteController::class, "getUsersWhoLiked"]);
 Route::post("upload/image", [ImageController::class, "uploadImage"]);
