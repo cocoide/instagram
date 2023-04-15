@@ -28,7 +28,8 @@ jobs:
       APP_KEY: base64:uV7+ASG+wtEwhruM8rpMh1Ix9Rf6gZU6TlUzTnT4oOM=
       
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       
       - name: Build Docker image
         uses: docker/build-push-action@v2
