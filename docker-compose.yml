@@ -4,7 +4,8 @@ services:
   nginx:
     container_name: "${PROJECT_NAME}-nginx"
     build:
-      dockerfile: "./dockerfiles/nginx/Dockerfile"
+      context: "./dockerfiles/nginx"
+      dockerfile: Dockerfile
     ports:
       - "${WEB_PORT}:80"
     volumes:
@@ -15,14 +16,16 @@ services:
   php:
     container_name: "${PROJECT_NAME}-php"
     build:
-      dockerfile: "./dockerfiles/php/Dockerfile"
+      context: "./dockerfiles/php"
+      dockerfile: Dockerfile
     volumes:
       - "./src:/var/www/html"
 
   mysql:
     container_name: "${PROJECT_NAME}-mysql"
     build:
-      dockerfile: "./dockerfiles/mysql/Dockerfile"
+      context: "./dockerfiles/mysql"
+      dockerfile: Dockerfile
     ports:
       - "${DB_PORT}:3306"
     environment:
