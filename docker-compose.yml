@@ -6,6 +6,8 @@ services:
     build:
       context: "./dockerfiles/nginx"
       dockerfile: Dockerfile
+      args:
+      - NGINX_CONF=./dockerfiles/nginx/default.conf
     ports:
       - "${WEB_PORT}:80"
     volumes:
@@ -28,6 +30,8 @@ services:
     build:
       context: "./dockerfiles/mysql"
       dockerfile: Dockerfile
+      args:
+      - MYSQL_CONF=./dockerfiles/mysql/default.conf
     ports:
       - "${DB_PORT}:3306"
     environment:
