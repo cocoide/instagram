@@ -1,6 +1,6 @@
 FROM php:fpm-buster
 
-COPY ./dockerfiles/php/php.ini /usr/local/etc/php/php.ini
+COPY ./php/php.ini /usr/local/etc/php/php.ini
 
 RUN apt-get update  && \
     apt-get -y install git zip unzip vim
