@@ -1,0 +1,50 @@
+name: Run PHPUnit Tests
+
+on:
+  pull_request:
+     branches:
+      - main
+  push:
+    branches:
+      - develop
+      - bugfix
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: test
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    env:
+      APP_ENV: testing
+      APP_KEY: base64:uV7+ASG+wtEwhruM8rpMh1Ix9Rf6gZU6TlUzTnT4oOM=
+      
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          tags: my-laravel-app:latest
+
+      - name: Run PHPUnit tests
+        uses: docker/compose-action@1.29.2
+        with:
+          compose-file: docker-compose.yml
+          service-name: app
+          env-file: .env.testing
+          run: |
+            composer install --no-progress --no-interaction --prefer-dist
+            php artisan config:cache
+            php artisan migrate --force
+            vendor/bin/phpunit
