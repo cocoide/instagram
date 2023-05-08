@@ -1,6 +1,6 @@
 export interface FetchHomeData {
-  data: FetchPostData[]
-  last_page: number
+    data: FetchPostData[]
+    last_page: number
 }
 
 export interface FetchPostData {
@@ -9,10 +9,10 @@ export interface FetchPostData {
     description?: string
     img_src?: string
     author: {
-      name: string
-      img_src: string
+        name: string
+        img_src: string
     }
     favorites: {
-      user_id: number
+        user_id: number
     }[]
-  }
+}

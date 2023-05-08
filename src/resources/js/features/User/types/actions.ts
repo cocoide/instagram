@@ -4,4 +4,4 @@ export interface FetchUserData {
     img_src: string
     posts: { img_src: string; id: number }[]
     favorites: []
-  }
+}

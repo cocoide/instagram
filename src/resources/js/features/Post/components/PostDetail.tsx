@@ -1,6 +1,6 @@
-import { FieldErrors, UseFormRegister } from 'react-hook-form'
-import { clsx } from '../../../utils/clsx'
-import { PostFormData } from '../types/actions'
+import { FieldErrors, UseFormRegister } from "react-hook-form"
+import { clsx } from "../../../utils/clsx"
+import { PostFormData } from "../types/actions"
 
 interface PostDetailProps {
     errors: FieldErrors<PostFormData>
